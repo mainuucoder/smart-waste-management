@@ -193,7 +193,7 @@ const Home = () => {
             to="/register" 
             className="inline-block bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 px-8 py-4 md:px-12 md:py-6 text-lg md:text-2xl font-bold rounded-full shadow-xl md:shadow-2xl transform hover:scale-105 transition-all duration-300 animate-pulse-slow w-full sm:w-auto"
           >
-            🌟 Join Now
+            🌟 Join Now...
           </Link>
         </div>
       </section>
