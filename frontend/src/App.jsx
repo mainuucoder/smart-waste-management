@@ -1,5 +1,7 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+
+import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
 import Home from './pages/Home';
@@ -13,23 +15,66 @@ import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <Routes>
-        {/* Public Routes - remove ProtectedRoute */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/reports" element={<Reports />} />
-        <Route path="/reports/create" element={<CreateReport />} />
-        <Route path="/schedules" element={<Schedules />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-50">
+          <Navbar />
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-        {/* Catch all */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </div>
+            {/* Protected Routes */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reports"
+              element={
+                <ProtectedRoute>
+                  <Reports />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reports/create"
+              element={
+                <ProtectedRoute>
+                  <CreateReport />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/schedules"
+              element={
+                <ProtectedRoute>
+                  <Schedules />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Admin Only Routes */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute adminOnly>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Catch all */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
