@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -18,13 +16,22 @@ console.log('🔧 ===== END DEBUG =====');
 
 const app = express();
 
-// Development-friendly CORS configuration
+// FIXED: Development-friendly CORS configuration with Vercel support
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:5173"],
+  origin: [
+    "http://localhost:3000", 
+    "http://localhost:5173", 
+    "http://127.0.0.1:5173",
+    "https://mainuucoder-smart-waste-manage-git-25a000-mainuucoders-projects.vercel.app",
+    /\.vercel\.app$/ // This allows ALL Vercel preview deployments
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
+// Handle preflight OPTIONS requests explicitly
+app.options('*', cors());
 
 // IMPORTANT: Parse JSON BEFORE logging
 app.use(express.json());
@@ -98,7 +105,7 @@ try {
   console.log('💡 Stack trace:', error.stack);
 }
 
-/// Try to load optional routes
+// Try to load optional routes
 try {
   const scheduleRoutes = require('./routes/scheduleRoutes');
   app.use('/api/schedules', scheduleRoutes);
@@ -108,6 +115,7 @@ try {
   console.log('💡 Check if file exists: routes/scheduleRoutes.js');
   console.log('💡 Error details:', error.stack);
 }
+
 try {
   const adminRoutes = require('./routes/adminRoutes');
   app.use('/api/admin', adminRoutes);
@@ -183,7 +191,14 @@ app.get('/api/debug', (req, res) => {
       readyState: mongoose.connection.readyState,
       models: Object.keys(mongoose.connection.models),
       collections: Object.keys(mongoose.connection.collections || {})
-    }
+    },
+    corsOrigins: [
+      "http://localhost:3000", 
+      "http://localhost:5173", 
+      "http://127.0.0.1:5173",
+      "https://mainuucoder-smart-waste-manage-git-25a000-mainuucoders-projects.vercel.app",
+      "*.vercel.app (all Vercel deployments)"
+    ]
   });
 });
 
@@ -222,11 +237,12 @@ app.use('*', (req, res) => {
       '/api/test-db',
       '/api/users/*',
       '/api/reports/*',
-      '/api/schedule/* (if available)',
+      '/api/schedules/* (if available)',
       '/api/admin/* (if available)'
     ]
   });
 });
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 DEVELOPMENT Server running on port ${PORT}`);
