@@ -16,14 +16,15 @@ console.log('🔧 ===== END DEBUG =====');
 
 const app = express();
 
-// FIXED: Development-friendly CORS configuration with Vercel support
+// FIXED: Complete CORS configuration with ALL Vercel URLs
 app.use(cors({
   origin: [
     "http://localhost:3000", 
     "http://localhost:5173", 
     "http://127.0.0.1:5173",
-    "https://mainuucoder-smart-waste-manage-git-25a000-mainuucoders-projects.vercel.app",
-    /\.vercel\.app$/ // This allows ALL Vercel preview deployments
+    "https://mainuucoder-smart-waste-management.vercel.app", // Production URL
+    "https://mainuucoder-smart-waste-manage-git-25a000-mainuucoders-projects.vercel.app", // Preview URL
+    /\.vercel\.app$/ // This regex allows ALL Vercel preview deployments
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -196,6 +197,7 @@ app.get('/api/debug', (req, res) => {
       "http://localhost:3000", 
       "http://localhost:5173", 
       "http://127.0.0.1:5173",
+      "https://mainuucoder-smart-waste-management.vercel.app",
       "https://mainuucoder-smart-waste-manage-git-25a000-mainuucoders-projects.vercel.app",
       "*.vercel.app (all Vercel deployments)"
     ]
